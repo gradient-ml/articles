@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2017.12.7)  24 FEB 2018 20:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2017.12.7)  25 FEB 2018 01:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -853,6 +853,10 @@ Package csquotes Info: ... configuration file loaded successfully.
 (/usr/share/texlive/texmf-dist/tex/latex/csquotes/csquotes.cfg
 File: csquotes.cfg 
 ))
+(/usr/share/texlive/texmf-dist/tex/latex/marginnote/marginnote.sty
+Package: marginnote 2017/04/22 v1.2b non floating margin notes for LaTeX
+\c@mn@abspage=\count139
+)
 (/usr/share/texlive/texmf-dist/tex/latex/tikz-qtree/tikz-qtree.sty
 (/usr/share/texlive/texmf-dist/tex/latex/tikz-qtree/pgftree.sty
 (/usr/share/texlive/texmf-dist/tex/latex/tikz-qtree/pgfsubpic.sty
@@ -873,9 +877,9 @@ File: csquotes.cfg
 \pgftree@savechildx=\dimen188
 \pgftree@childy=\dimen189
 \pgftree@savechildy=\dimen190
-\pgftree@childi=\count139
-\pgftree@savechildi=\count140
-\pgftree@level=\count141
+\pgftree@childi=\count140
+\pgftree@savechildi=\count141
+\pgftree@level=\count142
 \pgftree@depth=\dimen191
 \pgf@subpic@hbox@children=\box42
 \pgf@subpic@minx@children=\dimen192
@@ -896,31 +900,31 @@ Package csquotes Info: ... none found.
 (./Libratus.aux)
 \openout1 = `Libratus.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count142
+\scratchcounter=\count143
 \scratchdimen=\dimen198
 \scratchbox=\box43
-\nofMPsegments=\count143
-\nofMParguments=\count144
+\nofMPsegments=\count144
+\nofMParguments=\count145
 \everyMPshowfont=\toks40
-\MPscratchCnt=\count145
+\MPscratchCnt=\count146
 \MPscratchDim=\dimen199
-\MPnumerator=\count146
-\makeMPintoPDFobject=\count147
+\MPnumerator=\count147
+\makeMPintoPDFobject=\count148
 \everyMPtoPDFconversion=\toks41
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -979,69 +983,115 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 ABD: EveryShipout initializing macros
-LaTeX Font Info:    Try loading font information for U+msa on input line 40.
+Package marginnote Info: \pdfoutput not 0 or unimportant and
+(marginnote)             \pdflastxpos or \lastxpos available.
+(marginnote)             Extended position detection mode activated.
+LaTeX Font Info:    Try loading font information for U+msa on input line 41.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 40.
+LaTeX Font Info:    Try loading font information for U+msb on input line 41.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
 LaTeX Warning: Citation `brown2017superhuman' on page 1 undefined on input line
- 44.
+ 45.
 
+Package marginnote Info: Margin note 1.1 is on absolute page 1
+(marginnote)              on input line 45.
+Package marginnote Info: right page because not two side mode on input line 45.
+
+Package marginnote Info: xpos seems to be 440.5954pt,
+(marginnote)             \marginnoterightadjust ignored on input line 45.
 
 LaTeX Warning: Citation `moravvcik2017deepstack' on page 1 undefined on input l
-ine 44.
+ine 45.
 
+Package marginnote Info: Margin note 1.2 is on absolute page 1
+(marginnote)              on input line 47.
+Package marginnote Info: right page because not two side mode on input line 47.
 
-LaTeX Warning: Citation `mnih2015human' on page 1 undefined on input line 47.
+Package marginnote Info: xpos seems to be 340.43701pt,
+(marginnote)             \marginnoterightadjust ignored on input line 47.
+
+LaTeX Warning: Citation `mnih2015human' on page 1 undefined on input line 49.
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Package marginnote Info: Margin note 2.1 is on absolute page 2
+(marginnote)              on input line 78.
+Package marginnote Info: right page because not two side mode on input line 78.
+
+Package marginnote Info: xpos seems to be 337.31741pt,
+(marginnote)             \marginnoterightadjust ignored on input line 78.
+Package marginnote Info: Margin note 2.2 is on absolute page 2
+(marginnote)              on input line 84.
+Package marginnote Info: right page because not two side mode on input line 84.
+
+Package marginnote Info: xpos seems to be 447.99278pt,
+(marginnote)             \marginnoterightadjust ignored on input line 84.
+ [2]
+Package marginnote Info: Margin note 3.1 is on absolute page 3
+(marginnote)              on input line 101.
+Package marginnote Info: right page because not two side mode on input line 101
+.
+Package marginnote Info: xpos seems to be 296.96947pt,
+(marginnote)             \marginnoterightadjust ignored on input line 101.
+ [3]
 Missing character: There is no ] in font nullfont!
 Missing character: There is no ] in font nullfont!
 
 
 LaTeX Warning: Citation `silver2017mastering' on page 4 undefined on input line
- 170.
+ 177.
 
 [4]
+Overfull \hbox (19.70906pt too wide) in paragraph at lines 181--182
+\OT1/cmr/m/n/10 that Go is a [], while poker is an [].
+ []
+
 Missing character: There is no ] in font nullfont!
 
-Overfull \hbox (4.72545pt too wide) in paragraph at lines 218--219
+Overfull \hbox (4.72545pt too wide) in paragraph at lines 227--228
  [][] 
  []
 
 [5]
+Package marginnote Info: Margin note 6.1 is on absolute page 6
+(marginnote)              on input line 238.
+Package marginnote Info: right page because not two side mode on input line 238
+.
+Package marginnote Info: xpos seems to be 125.26999pt,
+(marginnote)             \marginnoterightadjust ignored on input line 238.
 
-LaTeX Warning: Citation `bowling2015heads' on page 6 undefined on input line 22
-7.
+
+LaTeX Warning: Citation `bowling2015heads' on page 6 undefined on input line 24
+0.
 
 [6]
 
 LaTeX Warning: Citation `brown2017superhuman' on page 7 undefined on input line
- 237.
+ 250.
 
 
-LaTeX Warning: Citation `bowling2015heads' on page 7 undefined on input line 24
-0.
+LaTeX Warning: Citation `bowling2015heads' on page 7 undefined on input line 25
+3.
 
 
 LaTeX Warning: Citation `brown2017superhuman' on page 7 undefined on input line
- 246.
+ 259.
 
 
 LaTeX Warning: Citation `zinkevich2008regret' on page 7 undefined on input line
- 251.
+ 264.
 
 
 LaTeX Warning: Citation `johanson2012efficient' on page 7 undefined on input li
-ne 251.
+ne 264.
 
 [7] [8] [9]
 No file Libratus.bbl.
@@ -1051,13 +1101,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 15835 strings out of 492990
- 308219 string characters out of 6135005
- 380180 words of memory out of 5000000
- 19038 multiletter control sequences out of 15000+600000
- 11812 words of font info for 46 fonts, out of 8000000 for 9000
+ 15893 strings out of 492990
+ 309117 string characters out of 6135005
+ 382270 words of memory out of 5000000
+ 19091 multiletter control sequences out of 15000+600000
+ 12158 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 61i,14n,95p,1217b,1039s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 61i,14n,95p,1243b,1039s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texli
@@ -1072,11 +1122,12 @@ s/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Libratus.pdf (9 pages, 185620 bytes).
+mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Libratus.pdf (9 pages, 203658 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 105 PDF objects out of 1000 (max. 8388607)
+ 76 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

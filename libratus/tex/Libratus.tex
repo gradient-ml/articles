@@ -7,8 +7,9 @@
 	\usepackage{diagbox}
 	\usepackage{tikz-cd}
 	\usepackage{csquotes}
-	\author{Jiren Z}
-	\title{Success of Libratus}
+	\usepackage{marginnote}
+	\author{Jiren Zhu}
+	\title{Understanding Libratus, the algorithm that beats world-class poker players}
 	\newcommand{\calA}{\mathcal{A}}
 	\newcommand{\calB}{\mathcal{B}}
 	\newcommand{\calD}{\mathcal{D}}
@@ -41,17 +42,21 @@
 % \setcounter{secnumdepth}{0}
 
 % \section{Introduction}
-In Janurary 2017, four world class poker players engaged in a 20(check duration)-day long battle of heads-up no-limit Texas hold'em. However, they were not competing against each other. Instead, they were fighting against a common foe, an AI for the game called ``Libratus'', developed by Noam Brown and Tuomas Sandholm from Carnegie Mellon University. As the game progresses, the computer held a solid advantage, beating the humans with $99.98\%$ statistical significance \cite{brown2017superhuman}. This is one of the first AI agents to beat professional players in heads-up no-limit Texas hold'em \footnote{Concurrently, Deep stack \cite{moravvcik2017deepstack} is shown to beat professionals as well.}. Different from other recent human-level AI agents, Libratus did not use Reinforcement Learning or Deep Learning that are extremely popular these days. Instead, Libratus used a rather classical Game Theoretic approach. It is natural to ask: what did Libratus do to play the game? What challenges did it face? How did it overcome them? To get an answer to these questions, we need to first look at the game poker itself.
+In January 2017, four world-class poker players engaged in a three-week battle of heads-up no-limit Texas hold'em. However, they were not competing against each other. Instead, they were fighting against a common foe: an AI called ``Libratus'', developed by Noam Brown and Tuomas Sandholm from Carnegie Mellon University. As the game progressed, the computer held a solid advantage, beating the humans with $99.98\%$ statistical significance \cite{brown2017superhuman}. \marginnote{What metric for significance?} This is one of the first AI agents to beat professional players in heads-up no-limit Texas hold 'em \footnote{Concurrently, DeepStack \cite{moravvcik2017deepstack} has been shown to beat professionals as well.}. Unlike other recent human-level AI agents, Libratus did not use Reinforcement Learning or Deep Learning, two approaches that are extremely popular these days. Instead, Libratus used a classical game-theoretic approach. It is natural to ask: what did Libratus do to play the game? What challenges did it face? And how did it overcome them? To get an answer to these questions, we first need to look at the game of poker itself. 
+\marginnote{Good opportunity here to mention that poker is more like the ``real world'' than other games}
 
 \section{Game, Games}
-Libratus is definitely not the only game-playing AI that makes news headlines in recent years. In 2015, DQN beat a lot of Atari ``games'', reaching superhuman level performance~\cite{mnih2015human}. These two games are rather different. DQN is a decision process best understood under the reinforcement learning framework where a \textbf{single} agent makes decisions. Libratus is developed under game theory, where \textbf{more than one} decision makers interact. The fact that there is more than one decision makers makes the story very different. In a decision process there is a unique best policy. In a multi-party game, the notion of optimality is different. Your opponent's strategy matters. Using your favorite strategy against Alice may give you different reward compared to using it against Bob. In fact, one of the most important concepts of Game Theory, the Nash Equilibrium, is percisely a way to characterize optimality of a strategy. We will introduce it first as it is crucial to understand any game theoretic work.
+Libratus is definitely not the only game-playing AI to make news headlines in recent years. In 2015, for instance, DeepMind's DQN beat a number of Atari ``games'', achieving superhuman performance~\cite{mnih2015human}. However, these two games are rather different. [The Atari games DQN beat are all single-player games, while poker is a multiplayer game. Thus the two AIs have very different designs:] DQN is a decision process best understood under the reinforcement learning framework, where a \textit{single} agent makes decisions. Libratus, on the other hand, is developed under game theory, where \textit{more than one} decision makers interact. 
 
-\subsection{Normal form games and Nash Equilibrium}
-Before we state Nash Equilibrium we need a more formal definition of games under Game Theory. For our purpose we will limit our discussion to two player games only. A very simple yet very important type of game is called \textbf{Normal Form Games}. In these games, each player has a collection of available actions: $A_1$, $A_2$. They choose actions $a_1 \in A_1$, $a_2 \in A_2$ simultaneously and receives rewards $u_1(a_1, a_2)$, $u_2(a_1, a_2)$ as functions over actions of both players.
+The presence of multiple decision makers makes the story very different. In a single-agent decision process, there is a unique best policy. But in a multi-party game, the notion of optimality is different. Your opponent's strategy matters. Using your favorite strategy against Alice may yield a different reward than using it against Bob. In fact, one of the most important concepts of game theory, the Nash equilibrium, is precisely a way to define an ``optimal'' strategy in this situation. We will introduce it first, as it is crucial to understanding the game-theoretic design of Libratus.
 
-As an example, let's look at how Rock-Paper-Scissors would look like under this formulation. Let's use $R$ for rock, $P$ for paper and $S$ for Scissor. We will also assume that for both players, winning a game would yield one dollar in return and losing will yield -1. A draw would mean 0 return for both players. The game would then look like Figure~\ref{figure:RPS}. If we want to see the outcome of a game, we would go to the row corresponding to action of player 1 and column corresponding to player 2. Say that player 1 plays paper and player 2 plays rock. We would find the $P-R$ cell and get $1/-1$. These numbers correspond to the rewards received by player 1 and player 2, respectively.
+\subsection{Normal form games and Nash equilibria}
 
-A strategy describes how the player chooses his actions. If a player chooses strategies deterministically, the strategy is called a pure strategy. A strategy that involves randomization is called a mixed strategy. We usually describe the strategy as a probability distribution over all actions, using $\sigma_1(a)$ to describe the probability that player 1 plays action $a$. Thus the expected payoff for this player is
+Before we define the Nash equilibrium, we need a more formal definition of games under game theory. A very simple yet very important type of game is the \textit{normal form game}. In a normal form game, each player has a collection of available actions: $A_1$ for Player 1, and $A_2$ for Player 2. (For our purpose, we will limit our discussion to two-player games only.) The two players simultaneously choose actions $a_1 \in A_1$, $a_2 \in A_2$ and receive rewards $u_1(a_1, a_2)$, $u_2(a_1, a_2)$, where $u_1$ and $u_2$ are functions over the actions of both players.
+
+As an example, let's look at how rock-paper-scissors would look like under this formulation. There are three actions available to both players: let's use $R$ for rock, $P$ for paper and $S$ for scissors. We will also assume that for both players, winning a game would yield one dollar in return and losing will yield -1. A draw would mean 0 return for both players. The game would then look like Figure~\ref{figure:RPS}. To see the outcome of a game, we would go to the row corresponding to action of Player 1 and column corresponding to Player 2. Say that Player 1 plays paper and Player 2 plays rock. We would find the $P-R$ cell and get $1/-1$. These numbers correspond to the rewards received by Player 1 and Player 2, respectively. Player 1 wins a dollar, Player 2 loses one. Paper beats rock.
+
+A \textit{strategy} describes how each player chooses his actions. If a player chooses strategies deterministically, the strategy is called a \textit{pure strategy}, and a strategy that involves some randomness is called a \textit{mixed strategy}. We usually describe a mixed strategy as a probability distribution over all actions, using $\sigma_1(a)$ to describe the probability that Player 1 plays action $a$. Thus the expected payoff for this player is
 $$
 	u_1(\sigma_1, \sigma_2) := \sum_{a_1 \in A_1, a_2 \in A_2} u_1(a_1, a_2)\sigma_1(a_2)\sigma_2(a_2)
 $$
@@ -65,35 +70,35 @@ $$
 		S & 1/-1 & 0/0  & -1/1 \\ \hline
 		R & -1/1 & 1/-1 & 0/0  \\ \hline
 	\end{tabular}
-	\caption{Normal form game formulation of the game Paper Scissor Stone}
+	\caption{Normal form game formulation of rock-paper-scissors}
 	\label{figure:RPS}
 \end{figure}
 
 \paragraph{Nash and Nash equilibrium}
-It is time that we introduce Nash, perhaps the most important figure in Game Theory. Nash is a genius Mathematician who laid the foundation of this thriving subject. Perhaps the most fundamental concept for Game Theory is that of a Nash Equilibrium, which Nash described. A \textbf{Nash Equilibrium} describes the scenario where none of the participants of a game can improve by changing his/her own strategy. Formally speaking, a Nash equilibrium consists of strategies $\sigma_1$ and $\sigma_2$ such that for player 1, if he chooses another strategy $\sigma_1'$, we have
+It is time that we introduce Nash, perhaps the most important figure in Game Theory. John Nash is a genius mathematician who laid the foundation of this thriving subject. \marginnote{Not sure if the bit about John Nash needs to be here. Maybe in the caption of a photo of Nash?} Perhaps the most fundamental concept in game theory is that of a Nash equilibrium, which Nash described. A \textbf{Nash equilibrium} is a scenario where none of the participants of a game can improve his/her outcome by changing only his/her own strategy. Formally speaking, a Nash equilibrium consists of strategies $\sigma_1$ and $\sigma_2$ such that if Player 1 chooses another strategy $\sigma_1'$, we have
 $$
 	u_1(\sigma_1, \sigma_2) \geq u_1(\sigma_1', \sigma_2)
 $$
-and vice versa for player 2. This captures the fact that a rational player would do whatever is in his/her control to maximize the outcome from a game.
+and vice versa for Player 2. This captures the fact that a rational player would do whatever is in his/her control to maximize the outcome from a game.
+\marginnote{Maybe say something about why a Nash equilibrium is ``optimal''?}
 
-It is not necessary that Nash equilibria always exist for a game when we only consider pure actions. For example, in the game of Rock-Paper-Scissors, if player 2 chooses Paper all the time. Player 1 can choose Scissors to win. But then player 2 should play Rock instead and the reasoning does not end. The only Nash equilibrium is one with mixed strategies where both player randomizes between all three actions with equal probability. Nash Equilibrium is a general concept that applies to all games. Nash's important contribution is the \textbf{``Nash Existence Theorem''} where he showed that there always exists at least a mixed strategy Nash Equilibrium for games with finite actions. For this reason one usually consider mixed strategies when talking about games as other wise the Nash Equilibrium may not even exist.
+Nash's important contribution is his proof of the \textit{Nash existence theorem}, which showed that there always exists a mixed strategy Nash Equilibrium for games with finite numbers of actions. For this reason, one usually considers mixed strategies when talking about games (as otherwise a Nash equilibrium may not even exist).
 
 \subsection{Zero-sum games}
-An shared feature among poker, rock-paper-scissors and many other competitive game is that whatever one player get is negative of what the other player gets. Such a game is called a \textbf{Zero-Sum Game}. Formally speaking, we have
+An shared feature among poker, rock-paper-scissors, and many other competitive games is that whatever one player gets is the negative of what the other player gets. Such a game is called a \textit{zero-sum game}. Formally speaking, for all $a_1 \in A_1$ and $a_2 \in A_2$, we have this equation:
 $$
 	u_1(a_1, a_2) + u_2(a_1, a_2) = 0
 $$
-An important property of zero-sum games is that any Nash equilibrium can be computed efficiently. A \textbf{maxmin} value of a player 1 is
+An important property of zero-sum games is that any Nash equilibrium can be computed efficiently. The \textbf{maxmin} value for Player 1 is the maximum payoff that Player 1 can guarantee regardless of what action Player 2 chooses:
 $$
 	\max\min_1 = \max_{a_1}(\min_{a_{2}} u_1(a_1, a_{2}))
 $$
-the maximum payoff that player 1 can guarantee if he chooses action before player 2. The corresponding \textbf{minmax} value of player 1 is
+The corresponding \textbf{minmax} value of Player 1 is the minimum payoff that Player 2 can force Player 1 into taking, if Player 2 chooses his/her action first:
 $$
 	\min\max_1 = \min_{a_2}(\max_{a_{1}} u_1(a_1, a_{2}))
 $$
-The minimum payoff that player 2 can cause player 1 to suffer if he actions before player 1.
 
-The \textbf{``Minmax Theorem''} states that minmax and maxmin are equal for a zero-sum game (with mixed strategies) and that Nash equilibria consists of both players playing maxmin strategies. An important corollary is that zero-sum games can be computed \textbf{efficiently} since the maxmin strategy can be solved by a linear program maximizing $v$ over $v \in \bbR$, $\sigma_1$ a probability distribution over $A_1$, satisfying
+The \textbf{Minmax theorem} states that minmax and maxmin are equal for a zero-sum game (with mixed strategies) \marginnote{Why do we discuss minmax at all?} and that Nash equilibria consist of both players playing maxmin strategies. An important corollary is that \textit{the Nash equilibria of zero-sum games can be computed efficiently} since the maxmin strategy can be solved by a linear program maximizing $v$ over $v \in \bbR$, $\sigma_1$ a probability distribution over $A_1$, satisfying
 $$
 	\sum_{a_1}\sigma_1(a_1)u_1(a_1, a_2) \geq v\ \forall a_2 \in A_2
 $$
@@ -101,7 +106,9 @@ $$
 \newpage
 \section{More complicated games}
 \subsection{Extensive form games}
-While normal form game can describe a variety of games. A more general \footnote{To be precise, an extensive form perfect information game, can always be casted back to a normal form game where the actions are different strategies. But the normal form game would be very large and redundant.} formalism is necessary for studying poker. In a normal form game two players take one action simultaneously. Games like poker are usually studied as an \textbf{extensive form game} where multiple actions may take place one after another. See Figure~\ref{figure:ExtensiveFormGame} for an example. Player 1 first takes action between $L$ and $R$. $R$ ends the game with payoff $(5,2)$. $L$ continues the game, offering player 2 choice between $l, r$ and corresponding rewards. All the possible games states are specified by the game tree and it is easy to read off what is going on.
+While many games fall in the category of normal form games, many more do not. In a normal form game, two players each take one action simultaneously. But games like poker, chess, and tic-tac-toe involve players taking turns and making a series of moves. A more general formalism is necessary \footnote{Technically, an extensive form perfect information game can still be casted back to a normal form game where the actions are different strategies. But this normal form game would be very large and redundant.} for studying these games. Thus, games like poker are usually studied as \textit{extensive form games}, where multiple actions may take place one after another. 
+
+See Figure~\ref{figure:ExtensiveFormGame} for an example. Player 1 first takes action between $L$ and $R$. $R$ ends the game with payoff $(5,2)$. $L$ continues the game, offering Player 2 choice between $l, r$ and corresponding rewards. All the possible games states are specified by the game tree, and it is relatively easy to read off what is going on.
 
 \begin{figure}[ht]
 	% https://gist.github.com/cdcrabtree/8134418
@@ -133,7 +140,7 @@ While normal form game can describe a variety of games. A more general \footnote
 	\label{figure:ExtensiveFormGame}
 \end{figure}
 
-A very good example of an extensive form zero-sum game is Go. Figure $3$ shows a game tree where we parametrize the location of the piece by its coordinate.
+Another very good example of an extensive form zero-sum game is Go. Figure $3$ shows a game tree where we parameterize the location of the piece by its coordinate.
 
 \begin{figure}[ht]
 	% https://gist.github.com/cdcrabtree/8134418
@@ -158,7 +165,7 @@ A very good example of an extensive form zero-sum game is Go. Figure $3$ shows a
 		]
 		\edge node [auto=left] {...};
 		[.\node [draw,fill=white,color=white,label=right:{...}] {};]
-		\edge node [auto=left] {...};
+		\edge node [auto=left] {(360 other possibilities...)};
 		[.\node [draw,fill=white,color=white,label=right:{...}] {};]
 		]
 		]
@@ -167,11 +174,13 @@ A very good example of an extensive form zero-sum game is Go. Figure $3$ shows a
 	\label{figure:Go}
 \end{figure}
 
-One immediately notice that it is hard to even specify a small portion of the game tree as possibilities grow exponentially fast. Even worse, while zero-sum games can be solved efficiently, a naive approach is polynomial in the number of pure strategies, and the number grows exponentially with respect to the size of game tree. So how to find an efficient representation of an extensive form game is a big challenge for agents. For example, Alpha Go~\cite{silver2017mastering} used neural networks to represent the outcome of a subtree of Go. Similarly, a lot of innovations in Libratus is spent on abstracting the game to a reasonable size while preserving relevant information.
+One immediately notices that it is hard to even specify a small portion of the game tree, as the number of possibilities grows exponentially fast. Even worse, while zero-sum games can be solved efficiently, a na\:{i}ve approach is polynomial in the number of pure strategies---and this number grows exponentially with respect to the size of game tree. Thus, finding an efficient representation of an extensive form game is a big challenge for game-playing agents. For example, AlphaGo~\cite{silver2017mastering} used neural networks to represent the outcome of a subtree of Go. Similarly, a lot of innovations in Libratus are novel ways to abstract the game to a reasonable size while preserving relevant information.
 
-\subsection{imperfect information}
-While both Go and Poker are extensive form games, an important difference is that Poker is an imperfect information game. In a game of poker, cards are dealt randomly. We take a simplified game tree of a Poker game for an example. See Figure~\ref{figure:imperfectinformation}. Randomness is depicted by the chance node (R) where a dice is rolled and possible outcomes happen with some probability.
+\subsection{Imperfect information games}
 
+[To those unfamiliar with game theory, it might come as a surprise that computers would beat humans at both chess and Go before heads-up no-limit Texas hold 'em.] While Go and poker are both extensive form games, the key difference is that Go is a \text{perfect information game}, while poker is an \text{imperfect information game}. In a game of poker, cards are dealt randomly, and players can only observe some of them. 
+
+To visualize the game tree of an imperfect information game, we use \textit{chance nodes}. For instance, Figure~\ref{figure:imperfectinformation} is a simplified game tree for poker. Here, randomness is depicted by the chance nodes $R_1$ and $R_2$.
 
 \begin{figure}[ht]
 	% https://gist.github.com/cdcrabtree/8134418
@@ -216,18 +225,22 @@ While both Go and Poker are extensive form games, an important difference is tha
 		]
 		\draw [dashed] (P1-A-A) -- (P1-A-K) ;
 	\end{tikzpicture}
-	\caption{A game tree of imperfect information game, player 1 cannot distinguish which $\circ$ he/she is in.}
+	\caption{A game tree of imperfect information game, Player 1 cannot distinguish which $\circ$ he/she is in.}
 	\label{figure:imperfectinformation}
 \end{figure}
 
-First a card is dealt to player 1 with some probability specified at chance node $R_1$, next a card is dealt to player 2 at chance node $R_2$. Then it is player 1's turn to bet. Note that in a poker game player 1 does have perfect information. He does not know what card is dealt to player 2. In the game tree, this is denoted by the \textbf{information set} (dashed line connecting two states). An information set is a collection of game states that a player cannot distinguish when making decisions. In terms of strategies, it is required that each player only have one strategy in each information set. When player 1 finds himself in the information set, the true state of the world is a distribution over all possibilities specified by the information set. So he needs to evaluate over all possible underlying states, what is the payoff of a potential action.
+In this simplified game tree, a random card is first dealt to Player 1 with some probability specified at chance node $R_1$. Then, another random card is dealt to Player 2 at chance node $R_2$. Finally, it is Player 1's turn to bet. 
 
-Imperfect information makes a crucial difference in decision making. A go agent makes decisions as the following: based on the \textbf{current state} of the game, what should I do? But a poker agent has to make a decision based on an estimate: based on my current \textbf{observations}, what are the \textbf{estimated distribution $\sigma$} of all possible ``ground truth'' states of the game, and what is the best action \textbf{based on $\sigma$}? The important difference follows. Because the opponent is making desicions as well, if you change your strategy at observed state $s$, he may change his action, and the model for opponent, namely the distribution $\sigma$, that you used to find the new strategy is no longer valid, and your strategy no longer works.
+\textit{Note that Player 1 does not have perfect information.} He does not know what card is dealt to Player 2. In the game tree, this is denoted by the dashed line between the two states, or the \textit{information set}. An information set is a collection of game states that a player cannot distinguish between when making decisions. In an imperfect information game, each player must have only one strategy in each information set. [\textit{The meaning of this sentence is unclear. Did we define extended-form strategies?}] When Player 1 finds himself in a certain information set, the true state of the world can only be guessed as a distribution over all possibilities specified by that information set. To decide his next action, he needs to evaluate the payoffs of each action over all possible underlying states.
 
-We shall follow \cite{bowling2015heads} and use a quote from Von Neumman to explain difference between perfect and imperfect information:
+Imperfect information makes a crucial difference in decision making. A Go-playing agent asks itself the question: ``based on the \textbf{current state} of the game, what should I do?'' But a poker agent has to make a decision based on an estimate: ``based on my current observations, what is the \textit{estimated distribution} of all possible ground truth states of the game, and what is the \textit{best action} based on that distribution?'' 
+
+\marginnote{I'm not sure if I get this ``important difference''. It seems to come from the extended form assumption and not necessarily the imperfect information one?} The important difference follows. Because the opponent is making decisions as well, if you change your strategy at observed state $s$, he may change his action, and the model for opponent, namely the distribution $\sigma$, that you used to find the new strategy is no longer valid, and your strategy no longer works. 
+
+We shall follow \cite{bowling2015heads} and use a quote from Von Neumman to explain the difference between perfect and imperfect information:
 
 \begin{displayquote}
-	Real life is not like that. Real life consists of bluffing, of little tactics of deception, of asking yourself what is the other man going to think I mean to do. And that is what games are about in my theory
+	Real life is not like that. Real life consists of bluffing, of little tactics of deception, of asking yourself what is the other man going to think I mean to do. And that is what games are about in my theory.
 \end{displayquote}
 
 \newpage
@@ -257,7 +270,7 @@ Libratus takes an alternative approach. It expands the game tree at the off-blue
 
 In a perfect information normal form game, if you have reached a subgame, your best strategy in this subgame is independent of what you do in other subgames. When you are holding a pair of $K$ and your opponent calls your blind, there are multiple possible situations, maybe he has $2$ and $7$, or he has a pair of $A$. All of his possible actions form a propability distribution conditioned on this information set being reached. But your opponent's action depends on how this subgame compares to other subgames. And if the opponent changes his strategy according to your new strategy in the subgame, the probability distribution of his possible hands at this information set would be different. This effectively invalidates the previously solved best strategy.
 
-``Unsafe'' subgame solving refers to the naive approach where one assumes that the opponent's strategy is fixed and computes a best strategy for the subgame. A ``safe'' subgame solving method augments the subgame by augmenting the subgame by giving player 1 some alternatives where he can choose not to enter the subgame being solved and receive expected payoff under the blueprint. This ensures that for any possible situation, player 1 is no better-off reaching the subgame after the new strategy is computed. This requirement turns out to be too conservative. Libratus uses ``reach'' subgame solving which only requires that player 1 becomes no better off for those cases where he is likely to reach this subgame.
+``Unsafe'' subgame solving refers to the naive approach where one assumes that the opponent's strategy is fixed and computes a best strategy for the subgame. A ``safe'' subgame solving method augments the subgame by augmenting the subgame by giving Player 1 some alternatives where he can choose not to enter the subgame being solved and receive expected payoff under the blueprint. This ensures that for any possible situation, Player 1 is no better-off reaching the subgame after the new strategy is computed. This requirement turns out to be too conservative. Libratus uses ``reach'' subgame solving which only requires that Player 1 becomes no better off for those cases where he is likely to reach this subgame.
 
 \subsection{Self improvement}
 Finally, during the day when Libratus is playing against human players, it looks for most frequent off-blueprint actions. At night, Libratus refines its blueprint to solve for equilibrium of these actions. Thus Libratus continuously narrows the gap between actions taken by the human players and its blueprint abstraction of the game. This way, as the game goes on, it is harder and harder to exploit the fact that Libratus is only solving an approximate version of the game.
